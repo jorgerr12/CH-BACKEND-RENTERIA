@@ -7,16 +7,16 @@ class ProductManager {
 
     async getDatos(){
         const products = await fs.readFile(this.path,"utf-8");
-        const _products = await JSON.parse(products)
-        return _products
+        const _products = await JSON.parse(products);
+        return _products;
         }
 
     async getProducts(){
-        if(fs.existsSync(this.path)){
-            return await this.getDatos();
-        }
-        else{
-            return[]
+        try {
+            const products = await this.getDatos();
+            return products;
+        } catch (error) {
+            return [];
         }
 
      }   
