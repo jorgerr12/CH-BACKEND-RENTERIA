@@ -3,6 +3,7 @@ const ProductManager = require("./ProductManager")
 
 const app = express()
 const manager = new ProductManager("./data/products.js")
+const PORT = 8080
 
 
 app.get("/products", async (req, res) => {
@@ -18,13 +19,14 @@ app.get("/products", async (req, res) => {
   })
 
 
-  app.get("/products/:pid", (req, res) => {
+  app.get("/products/:pid",async (req, res) => {
     const pid = req.params.pid
-    const product = manager.getProductById(pid)
-    product? res.send : res.send("no se encontro producto")
+    console.log(pid)
+    const product =  await manager.getProductById(pid)
+    product? res.send(product):res.send("no se encontro producto")
   })
 
 
-app.listen(8080, () => { //el callback es opcional y suele ser informativo
-    console.log("Server running")
+app.listen(PORT, () => { 
+    console.log(`Servidor Express corriendo en el puerto: ${PORT}`)
 })
