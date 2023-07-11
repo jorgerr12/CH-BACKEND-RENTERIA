@@ -1,8 +1,10 @@
-const fs = require("fs/promises");
-
-class ProductManager {
-    constructor(path){
-        this.path = path;
+import fs from "fs/promises"
+import { __dirname } from "../utils.js";
+import { existsSync } from "fs";
+import path from "path";
+export class ProductManager {
+    constructor(fileName){
+        this.path = path.join(__dirname,`/data/${fileName}`);
     }
 
     async getDatos(){
@@ -36,9 +38,9 @@ class ProductManager {
      }
 
      async getProductById(id){
-        if(fs.existsSync(this.path)){
+        if(existsSync(this.path)){
             const products = await this.getDatos();
-            const product = products.find(item => item.id ===id);
+            const product = products.find(item => item.id === parseInt(id));
             if(product){
                 return product;
             }
@@ -52,7 +54,7 @@ class ProductManager {
      }
 
      async updateProduct(id,data){
-        if(fs.existsSync(this.path)){
+        if(existsSync(this.path)){
             const products = await this.getDatos();
             const product = await this.getProductById(id);
             const _product = {...product,...data}
@@ -72,7 +74,7 @@ class ProductManager {
      }
 
      async deleteProduct(id){
-        if(fs.existsSync(this.path)){
+        if(existsSync(this.path)){
             const products = await this.getDatos();
             const filterProducts = products.filter((item)=> item.id !== id);
             await this.writeFile(filterProducts);
@@ -84,6 +86,7 @@ class ProductManager {
         }
      }
 
+
     }
 
-    module.exports = ProductManager;
+
