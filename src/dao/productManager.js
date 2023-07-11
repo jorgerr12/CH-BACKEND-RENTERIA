@@ -1,3 +1,4 @@
+<<<<<<< HEAD:src/dao/productManager.js
 import fs from "fs/promises"
 import { __dirname } from "../utils.js";
 import { existsSync } from "fs";
@@ -5,6 +6,13 @@ import path from "path";
 export class ProductManager {
     constructor(fileName){
         this.path = path.join(__dirname,`/data/${fileName}`);
+=======
+const fs = require("fs/promises");
+const { existsSync } = require("fs");
+class ProductManager {
+    constructor(path){
+        this.path = path;
+>>>>>>> a970e4ce6659455abdcf972c6a4745b29ac9975d:src/ProductManager.js
     }
 
     async getDatos(){
