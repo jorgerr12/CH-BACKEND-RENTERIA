@@ -41,7 +41,7 @@ export class ProductManager {
      async getProductById(id){
         if(existsSync(this.path)){
             const products = await this.getDatos();
-            const product = products.find(item => item.id === parseInt(id));
+            const product = products.find(item => item.id === id);
             if(product){
                 return product;
             }
@@ -67,7 +67,7 @@ export class ProductManager {
                 else {return item}
             })
             this.writeFile(updateList)
-            return updateList
+            return _product
         }
         else{
             console.log("no se encontro el archivo")

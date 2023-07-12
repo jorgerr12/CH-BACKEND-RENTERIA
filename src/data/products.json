@@ -1,14 +1,5 @@
 [
 	{
-		"id": 1,
-		"title": "Zapatillas Adidas",
-		"description": "zapatillas adidas color negro",
-		"price": 350,
-		"thumbnail": "img",
-		"code": "111",
-		"stock": 25
-	},
-	{
 		"id": 2,
 		"title": "zapatillas nike",
 		"description": "zapatillas nike color azul",
