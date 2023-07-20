@@ -26,5 +26,11 @@
 		"status": 1,
 		"category": "computo",
 		"thumbnails": "img"
+	},
+	{
+		"title": "producto prueba"
+	},
+	{
+		"title": "prueba 2"
 	}
 ]
