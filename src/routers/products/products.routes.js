@@ -1,30 +1,19 @@
 import { Router } from "express"
-import  ProductManager  from "../../dao/manager/productManager.js"
+import {ProductManager}  from "../../dao/manager/productManager.js"
 
-const productService = new ProductManager('products.json')
+const productService = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
-    const products = await productService.getProducts()
-    const limit = Number(req.query.limit)
-
-    if (limit) {
-        const limitProducts = products.slice(0, limit)
-        res.json({
-            status: "success",
-            data: limitProducts,
-        });
-    }
-    else {
-        res.json({
-            status: "success",
-            data: products,
-        });
-    }
+    const products = await productService.getAll()
+    res.json({
+        status: "success",
+        data: products,
+    });
 })
 
 router.get("/:pid", async (req, res) => {
-    const pid = Number(req.params.pid)
+    const pid = req.params.pid
     const product = await productService.getProductById(pid)
     product
         ? res.json({
@@ -40,7 +29,7 @@ router.get("/:pid", async (req, res) => {
 router.post("/", async (req, res) => {
     const product = req.body
     console.log(product.title)
-    !product.title ||
+        !product.title ||
         !product.description ||
         !product.price ||
         !product.code ||
@@ -49,12 +38,12 @@ router.post("/", async (req, res) => {
         ? res.status(400).json({ status: "error", error: "todos los campos son obligatorios" })
         : res.json({
             status: "succes",
-            data: await productService.addProduct(product),
+            data: await productService.createProduct(product),
         });
 })
 
 router.put("/:pid", async (req, res) => {
-    const pid = Number(req.params.pid)
+    const pid = req.params.pid
     const pruduct = req.body;
     const foundId = pruduct.hasOwnProperty("id");
     const data = await productService.updateProduct(pid, pruduct)

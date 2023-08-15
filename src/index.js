@@ -24,3 +24,5 @@ const httpServer = app.listen(config.server.port, () => {
 
   connectDB();
 app.use(viewsRouter);
+app.use("/api/products",productsRouter)
+app.use("/api/carts",cartsRouter);
