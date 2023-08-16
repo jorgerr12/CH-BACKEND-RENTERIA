@@ -26,16 +26,16 @@ export class CartManager {
 
     getCartById = async (id)=>{
         try {
-             const cart = await cartsModel.findById({_id:id});
+             const cart = await cartsModel.findById({_id:id}).populate("products.product");
              return cart;
         } catch (error) {
             console.log("error getCartById",error)
         }
     }
 
-    updateCart = async (cid,produts)=>{
+    updateCart = async (cid,products)=>{
         try {
-            const cart = await cartsModel.findByIdAndUpdate(cid,{produts:produts});
+            const cart = await cartsModel.findByIdAndUpdate(cid,{products:products});
             return cart
         } catch (error) {
             console.log("error in upadateCart:",error)

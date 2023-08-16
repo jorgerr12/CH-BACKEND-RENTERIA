@@ -16,6 +16,7 @@ export class ProductManager {
 
     getWithPaginate = async (query, options) => {
         try {
+            
             const result = await productModel.paginate(query, options);
             return result;
         } catch (error) {
