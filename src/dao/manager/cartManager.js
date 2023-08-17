@@ -1,5 +1,4 @@
 import cartsModel from "../models/carts.models.js"
-import productsModel from "../models/products.model.js"
 
 export class CartManager {
      getAll= async ()=> {
@@ -26,7 +25,7 @@ export class CartManager {
 
     getCartById = async (id)=>{
         try {
-             const cart = await cartsModel.findById({_id:id}).populate("products.product");
+             const cart = await cartsModel.findById({_id:id}).populate("products.product").lean();
              return cart;
         } catch (error) {
             console.log("error getCartById",error)
