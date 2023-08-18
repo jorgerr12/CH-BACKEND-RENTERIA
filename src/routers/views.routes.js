@@ -1,20 +1,23 @@
 import { Router } from "express";
 import { ProductManager } from "../dao/manager/productManager.js";
 import { CartManager } from "../dao/manager/cartManager.js";
+import auth from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 const productService = new ProductManager()
 const cartService = new CartManager()
 
-router.get("/realtimeproducts", (req, res) => {
+
+// rutas protegidas
+router.get("/realtimeproducts",auth, (req, res) => {
   res.render("realTimeProducts", {});
 });
 
-router.get("/", async (req, res) => {
+router.get("/",auth, async (req, res) => {
   res.render("home", {});
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products",auth, async (req, res) => {
   try {
     const { limit = 10, page = 1, stock = 0, sort = "asc" } = req.query;
     const stockValue = stock === 0 ? undefined : parseInt(stock)
@@ -56,7 +59,7 @@ router.get("/products", async (req, res) => {
 
 });
 
-router.get("/cart/:cid", async (req, res) => {
+router.get("/cart/:cid",auth, async (req, res) => {
   try {
     const cid = req.params.cid
 
@@ -70,4 +73,20 @@ router.get("/cart/:cid", async (req, res) => {
 
 })
 
+// rutas publicas
+router.get("/login",(req,res)=>{
+  if (req.session?.user) {
+    res.send("ya esta loggeado, no se puede volver a logear");
+  } else {
+    res.render("login",{layout: false});
+  }
+})
+
+router.get("/register",(req,res)=>{
+  if(req.session?.user){
+    res.send("ya esta loggeado, no se puede volver a logear");
+  }else{
+    res.render("register",{layout: false});
+  }
+})
 export { router as viewsRouter }
