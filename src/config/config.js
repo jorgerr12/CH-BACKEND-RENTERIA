@@ -1,9 +1,15 @@
+import dotenv from "dotenv"
+const NODE_ENV = process.env.NODE_ENV || 'development'
+dotenv.config({
+  path:`.env.${NODE_ENV}`
+})
+
 export const config = {
   server:{
-    port:8080
+    port:process.env.PORT ||8080
   },
   mongo:{
-    url:"mongodb+srv://jorgrenteriaro:kamitec@cluster0.yfnzxex.mongodb.net/tiendaOnline?retryWrites=true&w=majority"
+    url:process.env.MONGO_URL
   }
 
 }

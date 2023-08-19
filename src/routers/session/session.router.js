@@ -16,18 +16,16 @@ router.post("/register", (req, res) => {
             password: req.body.password,
             userRol:userRol
         }
-        console.log(req.session.user)
-        res.send({status:"success",message:"usuario registrado con exito"})
+        res.send({status:"success",message:"usuario registrado con exito",user:req.session.user})
         }
         else{
             res.send({status:"error",message:"complete los datos necesarios"})
         }
     
 
-})
+});
 
 router.post("/login",(req,res)=>{
-    console.log("desde login")
     if (req.session.user) {
         res.send("ya se encuentra logeado")
     }
@@ -40,7 +38,7 @@ router.post("/login",(req,res)=>{
             password: req.body.password,
             userRol:userRol
         }
-        res.send({status:"success",message:"usuario logeado con exito"})
+        res.send({status:"success",message:"usuario logeado con exito",user:req.session.user})
         }
         else{
             res.send({status:"error",message:"complete los datos necesarios"})

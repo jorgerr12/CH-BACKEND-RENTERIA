@@ -1,4 +1,5 @@
 import  express  from "express"
+import dotenv from "dotenv"
 import session from "express-session"
 import { __dirname } from "./utils.js"
 import hanblebars  from "express-handlebars"
@@ -8,8 +9,14 @@ import { connectDB } from "./config/dbConnection.js"
 import { productsRouter } from "./routers/products/products.routes.js"
 import { cartsRouter } from "./routers/cart/cart.routes.js"
 import { sessionRouter } from "./routers/session/session.router.js"
-const app = express();
 
+
+const NODE_ENV = process.env.NODE_ENV || 'development'
+dotenv.config({
+  path:`.env.${NODE_ENV}`
+})
+
+const app = express();
 app.engine("handlebars", hanblebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");

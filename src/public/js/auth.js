@@ -16,7 +16,8 @@ registerForm?.addEventListener("submit", async (event) => {
   .then(res => res.json())
   .then(res =>{
     if(res.status === "success"){
-        location.href = '/products';
+      sessionStorage.setItem("user", JSON.stringify(res.user));
+      location.href = '/products';
     }
   })
   .catch((err) => console.log(err));
@@ -36,9 +37,10 @@ loginForm?.addEventListener("submit", async (event) => {
   })
   .then(res => res.json())
   .then(res =>{
-    if(res.status === "success"){
-        location.href = '/products';
-    }
+    if(res.status === "success"){ 
+       sessionStorage.setItem("user", JSON.stringify(res.user));
+       location.href = '/products';
+     }
   })
   .catch((err) => console.log(err));
 });

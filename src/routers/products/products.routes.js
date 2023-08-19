@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {ProductManager}  from "../../dao/manager/productManager.js"
+import { ProductManager } from "../../dao/manager/productManager.js"
 
 const productService = new ProductManager()
 const router = Router()
@@ -29,12 +29,12 @@ router.get("/:pid", async (req, res) => {
 router.post("/", async (req, res) => {
     const product = req.body
     console.log(product.title)
-        !product.title ||
+    !product.title ||
         !product.description ||
         !product.price ||
         !product.code ||
         !product.status ||
-        !product.category 
+        !product.category
         ? res.status(400).json({ status: "error", error: "todos los campos son obligatorios" })
         : res.json({
             status: "succes",
@@ -58,23 +58,32 @@ router.put("/:pid", async (req, res) => {
                 data: data
             });
         } else {
-            res.status(400).json({status:"error",error:"producto no existe"})
+            res.status(400).json({ status: "error", error: "producto no existe" })
         }
     }
 })
 
 router.delete("/:pid", async (req, res) => {
     const pid = Number(req.params.pid);
-    const existe = productService.getProductById(pid)
+    const product = productService.getProductById(pid)
 
-    existe
-    ? res.json({
-        status: "succes",
-        data: await productService.deleteProduct(pid),
-      })
-    : res.status(400).json({status:"error",error:"producto no existe"});
-    
-  });
+    if (!product) {
+        return res.status(400).json({ status: "error", error: "producto no existe" });
+
+    }
+    try {
+
+        const deletedProduct = await productService.deleteProduct(pid);
+
+        res.json({ status: "success", data: deletedProduct });
+
+    } catch (error) {
+
+        res.status(500).json({ status: "error", error: "ocurrió un error al eliminar el producto" });
+
+    }
+
+});
 
 
 export { router as productsRouter }

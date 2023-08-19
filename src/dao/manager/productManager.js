@@ -56,7 +56,7 @@ export class ProductManager {
 
     deleteProduct = async (id) => {
         try {
-            const deletedProduct = await productModel.findByAndDelete(id)
+            const deletedProduct = await productModel.findByIdAndDelete(id)
             return deletedProduct
         } catch (error) {
             console.log("error in deleted product", error)
