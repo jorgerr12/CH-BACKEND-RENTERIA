@@ -9,6 +9,9 @@ import { connectDB } from "./config/dbConnection.js"
 import { productsRouter } from "./routers/products/products.routes.js"
 import { cartsRouter } from "./routers/cart/cart.routes.js"
 import { sessionRouter } from "./routers/session/session.router.js"
+import MongoStore from "connect-mongo"
+import initializePassport from "./config/passport.config.js"
+import passport from "passport"
 
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
@@ -26,12 +29,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.use(
   session({
-    name: "session1",
+    store:MongoStore.create({
+      mongoUrl:config.mongo.url,
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 60,
+    }),
     secret: "s3cr3ts3ss10ns",
     resave: false,
     saveUninitialized: false,
   })
 );
+initializePassport();
+app.use(passport.initialize());
 
 
 const httpServer = app.listen(config.server.port, () => {
