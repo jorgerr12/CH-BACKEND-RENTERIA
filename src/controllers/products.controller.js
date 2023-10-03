@@ -1,4 +1,5 @@
 import { ProductManager } from "../dao/manager/productManager.js"
+import ProductDto from "../dto/product.dto.js";
 const productService = new ProductManager()
 export class ProductosController {
 
@@ -26,7 +27,7 @@ export class ProductosController {
     }
 
     static async store(req,res){
-        const product = req.body
+        const product = new ProductDto(req.body)
         console.log(product.title)
         !product.title ||
             !product.description ||
