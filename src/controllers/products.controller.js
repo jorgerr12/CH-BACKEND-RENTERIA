@@ -1,17 +1,26 @@
 import { ProductManager } from "../dao/manager/productManager.js"
 import ProductDto from "../dto/product.dto.js";
-const productService = new ProductManager()
+import { ProductService as productService } from "../repository/index.repository.js";
 export class ProductosController {
 
-    static async index(req,res){
+    static async generateMockingProducts(req, res) {
+        console.log("generando productos")
+        try {
+            const products = await productService.generateMockingProducts();
+            return res.json({ message: `All mock products successfully generated`, products });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
+    static async index(req, res) {
         const products = await productService.getAll()
         res.json({
-        status: "success",
-        data: products,
-    });
+            status: "success",
+            data: products,
+        });
     }
 
-    static async getById(req,res){
+    static async getById(req, res) {
         const pid = req.params.pid
         const product = await productService.getProductById(pid)
         product
@@ -26,23 +35,21 @@ export class ProductosController {
             })
     }
 
-    static async store(req,res){
-        const product = new ProductDto(req.body)
-        console.log(product.title)
-        !product.title ||
-            !product.description ||
-            !product.price ||
-            !product.code ||
-            !product.status ||
-            !product.category
-            ? res.status(400).json({ status: "error", error: "todos los campos son obligatorios" })
-            : res.json({
-                status: "succes",
-                data: await productService.createProduct(product),
+    static async store(req, res) {
+        try {
+            const productInstDto = /* new ProductDto */(req.body);
+            const newProduct = await this.productService.createProduct(productInstDto, res);
+
+            return res.json({
+                message: `Product created successfully`,
+                product: newProduct,
             });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
     }
 
-    static async update(req,res){
+    static async update(req, res) {
         const pid = req.params.pid
         const pruduct = req.body;
         const foundId = pruduct.hasOwnProperty("id");
@@ -63,7 +70,7 @@ export class ProductosController {
         }
     }
 
-    static async delete(req,res){
+    static async delete(req, res) {
         const pid = Number(req.params.pid);
         const product = productService.getProductById(pid)
 
