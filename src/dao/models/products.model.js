@@ -35,10 +35,17 @@ const productsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    thumbnails: {
-        type: Array,
-        required: true,
-      },
+    createdBy: {
+        user: {
+          type: String,
+          required: true,
+        },
+        role: {
+          type: String,
+          required: true,
+          enum: ["ADMIN", "PREMIUM"],
+        }
+    }
 });
 
 productsSchema.plugin(mongoosePaginate);

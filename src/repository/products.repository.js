@@ -1,9 +1,10 @@
 import productModel from "../dao/models/products.model.js";
 import { EnumErrors, HttpResponse } from "../middlewares/errors.middlewares.js";
 import generateProducts from "../utils/mocks/generate.products.js";
+import { MailingService } from "./index.repository.js";
 
 
- class ProductsServiceDao {
+class ProductsServiceDao {
 
     constructor(dao) {
         this.dao = dao;
@@ -12,18 +13,18 @@ import generateProducts from "../utils/mocks/generate.products.js";
 
     generateMockingProducts = async () => {
         console.log("generateMockingProducts from REPOSITORY executed");
-        
+
         try {
-          let products = [];
-          for (let index = 0; index < 100; index++) {
-            products.push(generateProducts());
-          }
-        
-          return products
+            let products = [];
+            for (let index = 0; index < 100; index++) {
+                products.push(generateProducts());
+            }
+
+            return products
         } catch (error) {
-          console.log("🚀 ~ file: products.repository.js:31 ~ ProductServiceDao ~ insertProducts= ~ error:", error)
+            console.log("🚀 ~ file: products.repository.js:31 ~ ProductServiceDao ~ insertProducts= ~ error:", error)
         }
-      }
+    }
     getAll = async (queries) => {
         try {
             const produts = await productModel.find()
@@ -55,6 +56,10 @@ import generateProducts from "../utils/mocks/generate.products.js";
 
     createProduct = async (productData, res) => {
         try {
+            const createdBy = {
+                user: req.session.user._doc.email,
+                role: req.session.user._doc.role
+            };
             if (
                 (!productData.title || typeof productData.title !== 'string') ||
                 (!productData.description || typeof productData.description !== 'string') ||
@@ -72,7 +77,7 @@ import generateProducts from "../utils/mocks/generate.products.js";
             }
 
             const codeCheck = await productModel.findOne({ code: productData.code });
-            console.log(codeCheck)
+        
             if (codeCheck) {
                 return this.httpResp.BadRequest(
                     res,
@@ -80,6 +85,7 @@ import generateProducts from "../utils/mocks/generate.products.js";
                     productData.code
                 );
             }
+            productData.createdBy = createdBy;
             const product = await productModel.create(productData);
             return product;
 
@@ -88,7 +94,7 @@ import generateProducts from "../utils/mocks/generate.products.js";
                 res,
                 `Error creating product`,
                 error?.message
-              );
+            );
         }
     }
     updateProduct = async (id, fieldsToUpdate) => {
@@ -106,6 +112,15 @@ import generateProducts from "../utils/mocks/generate.products.js";
     deleteProduct = async (id) => {
         try {
             const deletedProduct = await productModel.findByIdAndDelete(id)
+            if (product.createdBy.role === "PREMIUM") {
+                const emailAdress = product.createdBy.user;
+          
+                const emails = await MailingService.sendDeletedProductEmail(
+                  emailAdress,
+                  product
+                );
+                console.log(`Email successfully sent to ${emailAdress}`);
+              }
             return deletedProduct
         } catch (error) {
             console.log("error in deleted product", error)
@@ -114,15 +129,15 @@ import generateProducts from "../utils/mocks/generate.products.js";
 
     loggerTest = async (productId) => {
         console.log("getProductById from REPOSITORY executed");
-    
+
         try {
-          const product = await productModel.findById({ _id: productId });
-          return product;
-    
+            const product = await productModel.findById({ _id: productId });
+            return product;
+
         } catch (error) {
-        console.log("🚀 ~ file: products.repository.js:67 ~ ProductServiceDao ~ loggerTest= ~ error:", error)
+            console.log("🚀 ~ file: products.repository.js:67 ~ ProductServiceDao ~ loggerTest= ~ error:", error)
         }
-      };
+    };
 
 
 }

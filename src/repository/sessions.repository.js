@@ -4,6 +4,7 @@ import passport from "passport";
 import { CartService } from "./index.repository.js";
 
 
+
 class SessionServiceDao {
   constructor(dao, CartService) {
     this.dao = dao,
@@ -57,7 +58,8 @@ class SessionServiceDao {
       if (!isValidPass) {
         res.send({ status: "error", message: "Contraseña incorrecta" })
       }
-
+      findEmail.lastActivity = new Date();
+      await findEmail.save();
       req.session.user = {
         ...findEmail,
         password: "",

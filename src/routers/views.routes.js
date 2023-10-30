@@ -89,4 +89,9 @@ router.get("/register",(req,res)=>{
     res.render("register",{layout: false});
   }
 })
+router.get("/forget-password",(req,res)=>{
+
+    res.render("forget-password",{layout: false});
+
+})
 export { router as viewsRouter }

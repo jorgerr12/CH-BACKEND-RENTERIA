@@ -35,10 +35,13 @@ const userShema = new mongoose.Schema({
       role:{
           type:String,
           required:true,
-          enum:["USER","ADMIN","PUBLIC"],
+          enum:["USER","ADMIN","PUBLIC","PREMIUM"],
           default:"USER",
       },
-      
+      lastActivity: {
+        type: Date,
+        default: Date.now,
+      },
 });
 const userModel = mongoose.model(collectionName,userShema);
 export default userModel;

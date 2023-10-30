@@ -15,6 +15,8 @@ export const config = {
     client_id:process.env.GITHUB_CLIENT_ID,
     client_secret:process.env.GITHUB_CLIENT_SECRET
   },
-  persistence:process.env.PERSISTENCE
+  persistence:process.env.PERSISTENCE,
+  EMAIL:process.env.EMAIL,
+  EMAIL_PASSWORD:process.env.EMAIL_PASSWORD,
 
 }

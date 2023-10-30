@@ -27,6 +27,7 @@ class Sessions {
 
 
 
+
 (async () => {
     switch (config.persistence) {
       case "MONGO":

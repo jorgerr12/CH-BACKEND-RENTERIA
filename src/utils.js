@@ -11,3 +11,12 @@ export const createHashValue = async (val)=>{
 export const isValidPassword = async (pass,encryptedPass) =>{
  return await bcrypt.compareSync(pass,encryptedPass);
 }
+
+export const generateRandomString = (num) => {
+    return [...Array(num)].map(() => {
+        const randomNum = ~~(Math.random() * 36);
+        return randomNum.toString(36);
+    })
+        .join('')
+        .toUpperCase();
+}
