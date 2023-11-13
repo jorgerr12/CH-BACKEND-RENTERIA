@@ -9,7 +9,8 @@ export const config = {
     port:process.env.PORT ||8080
   },
   mongo:{
-    url:process.env.MONGO_URL
+    url:process.env.MONGO_URL,
+    urlTest:process.env.MONGO_URL_TEST
   },
   github:{
     client_id:process.env.GITHUB_CLIENT_ID,
