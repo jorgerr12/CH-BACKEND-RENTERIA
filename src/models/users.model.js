@@ -38,10 +38,20 @@ const userShema = new mongoose.Schema({
           enum:["USER","ADMIN","PUBLIC","PREMIUM"],
           default:"USER",
       },
-      lastActivity: {
-        type: Date,
-        default: Date.now,
-      },
+      documents: [
+        {
+            name: String,
+            reference: String
+        }
+    ],
+    status: {
+        type: String,
+        enum: ['pending', 'active'],
+        default: 'pending'
+    },
+    last_connection: {
+        type: Date
+    }
 });
 const userModel = mongoose.model(collectionName,userShema);
 export default userModel;

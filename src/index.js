@@ -11,12 +11,14 @@ import { productsRouter } from "./routers/products/products.routes.js"
 import { cartsRouter } from "./routers/cart/cart.routes.js"
 import { sessionRouter } from "./routers/session/session.router.js"
 import { mailingRouter } from "./routers/mailing/mailing.routes.js"
+import { usersRouter } from "./routers/users/users.routes.js"
 import MongoStore from "connect-mongo"
 import initializePassport from "./config/passport.config.js"
 import passport from "passport"
 import { setLogger } from "./utils/logger.js"
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 dotenv.config({
@@ -81,3 +83,4 @@ app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter);
 app.use("/api/session", sessionRouter)
 app.use("/api/mailing", mailingRouter)
+app.use("/api/users", usersRouter)

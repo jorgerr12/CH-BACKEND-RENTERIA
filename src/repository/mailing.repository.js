@@ -2,8 +2,8 @@ import nodemailer from "nodemailer"
 import path from "path"
 import {config} from "../config/config.js"
 import { generateRandomString } from "../utils.js";
-import UserPasswordModel from "../dao/models/userPassword.model.js";
-import userModel from "../dao/models/users.model.js";
+import UserPasswordModel from "../models/userPassword.model.js";
+import userModel from "../models/users.model.js";
 
 
 
@@ -112,5 +112,23 @@ export class MailingRepository{
             res.status(500).json({ status: 'errorx', error: err.message })
           }
         
+    }
+
+    deletedAccount = async (emailAdress)=>{
+        
+        for (const email of emailAdress) {
+        let message = {
+            from: config.mailDelEcommerce,
+            to: email,
+            subject: 'Cuenta eliminada por inactividad',
+            html: 'Tu cuenta ha sido eliminada por inactividad'
+          }
+          try {
+            await transporter.sendMail(message)
+           return ({ status: 'success', message: `Email enviado con exito a ${email} para restablecer la contraseña` })
+          } catch (err) {
+            return ({ status: 'error', error: err.message })
+          }
+        }
     }
 }

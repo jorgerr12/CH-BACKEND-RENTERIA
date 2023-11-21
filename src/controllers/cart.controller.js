@@ -1,6 +1,5 @@
-import { CartManager } from "../dao/manager/cartManager.js";
+import { CartService as cartService } from "../repository/index.repository.js"
 
-const cartService = new CartManager('cart.json')
 
 export class CartController {
 
@@ -11,6 +10,7 @@ export class CartController {
         ? res.json({status:"success",data:data})
         : res.json({status:"error",error:"cid incorrecto"})
     }
+
     static async create (req,res){
         const {products} = req.body
     const data={
@@ -22,6 +22,7 @@ export class CartController {
         data: await cartService.createCart(data)
     })
     }
+
     static async update (req,res){
         const cid = req.params.cid
         const {products} = req.body
@@ -33,6 +34,7 @@ export class CartController {
         })
         :res.json({status:"error",error:"error al registrar producto"})
     }
+
     static async updateProduct (req,res){
         const cid = req.params.cid
         const pid = req.params.pid

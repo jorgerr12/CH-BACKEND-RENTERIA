@@ -1,4 +1,4 @@
-import { ProductManager } from "../dao/manager/productManager.js"
+
 import ProductDto from "../dto/product.dto.js";
 import { ProductService as productService } from "../repository/index.repository.js";
 export class ProductosController {

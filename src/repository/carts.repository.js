@@ -1,5 +1,5 @@
-import cartsModel from "../dao/models/carts.models.js";
-import productModel from "../dao/models/products.model.js";
+import cartsModel from "../models/carts.models.js";
+import productModel from "../models/products.model.js";
 import { ProductService } from "./index.repository.js";
 
 class CartsServiceDao {

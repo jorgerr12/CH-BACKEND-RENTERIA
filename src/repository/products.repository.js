@@ -1,4 +1,4 @@
-import productModel from "../dao/models/products.model.js";
+import productModel from "../models/products.model.js";
 import { EnumErrors, HttpResponse } from "../middlewares/errors.middlewares.js";
 import generateProducts from "../utils/mocks/generate.products.js";
 import { MailingService } from "./index.repository.js";

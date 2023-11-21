@@ -1,3 +1,5 @@
+
+
 const auth = (req, res, next) => {
     if (req.session.user) {
       return next();
@@ -5,5 +7,13 @@ const auth = (req, res, next) => {
       res.redirect("/login")
     }
   };
+  const isAdmin = (req, res, next) => {
 
-  export default auth
+    if (req.session.user && req.session.user._doc.role == 'ADMIN') {
+      next();
+    } else {
+        // El usuario no tiene permisos de administrador, responde con un acceso no autorizado
+        res.status(403).json({ message: 'Acceso no autorizadoo.'});
+    }
+};
+  export {auth,isAdmin} 

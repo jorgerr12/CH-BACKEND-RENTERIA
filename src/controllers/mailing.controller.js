@@ -24,4 +24,13 @@ export class MailingController{
             return res.status(500).json({ message: error.message });
         }
     }
+
+    static sendDeletedAccount = async (emailAddress)=>{
+        try {
+            const result = await MailingService.deletedAccount(emailAddress);
+            return result
+        } catch (error) {
+            return ({ message: error.message });
+        }
+    }
 }

@@ -1,9 +1,10 @@
 
 import { createHashValue, isValidPassword } from "../utils.js";
-import userModel from "../dao/models/users.model.js";
+import userModel from "../models/users.model.js";
 import passport from "passport";
-import UserPasswordModel from "../dao/models/userPassword.model.js";
+import UserPasswordModel from "../models/userPassword.model.js";
 import bcrypt from 'bcryptjs'
+import { setLogger } from "../utils/logger.js";
 export class SessionController {
 
   static async register(req, res, next) {
@@ -68,9 +69,10 @@ export class SessionController {
 
   static async logout(req, res) {
     if (req.session.user) {
+
       req.session.destroy((err) => {
         if (err) {
-          console.log(err);
+         setLogger.error(err.message)
         } else {
           res.clearCookie("session1");
           res.redirect("/");

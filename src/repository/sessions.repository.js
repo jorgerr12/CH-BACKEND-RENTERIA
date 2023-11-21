@@ -1,5 +1,5 @@
 import { createHashValue, isValidPassword } from "../utils.js";
-import userModel from "../dao/models/users.model.js";
+import userModel from "../models/users.model.js";
 import passport from "passport";
 import { CartService } from "./index.repository.js";
 
