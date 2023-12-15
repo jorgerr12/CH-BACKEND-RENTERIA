@@ -5,65 +5,27 @@ import passport from "passport";
 import UserPasswordModel from "../models/userPassword.model.js";
 import bcrypt from 'bcryptjs'
 import { setLogger } from "../utils/logger.js";
+import { SessionService as sessionService } from "../repository/index.repository.js";
 export class SessionController {
 
   static async register(req, res, next) {
-    if (req.session.user) {
-      res.send("ya se encuentra logeado")
-    }
-    if (req.body.email && req.body.firstName && req.body.password) {
-
-      const passHashed = await createHashValue(req.body.password)
-      const newUserData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        age: req.body.age,
-        username: req.body.userName,
-        email: req.body.email,
-        password: passHashed,
-      }
-
-      const findUserEmail = await userModel.findOne({ email: newUserData.email })
-
-      if (findUserEmail) {
-        return res
-          .status(409).json({ message: "username and/or email already exist" });
-      }
-      const newUser = await userModel.create(newUserData);
-      req.session.user = { ...newUserData };
-      res.send({ status: "success", message: "usuario registrado con exito", user: newUser })
-    }
-    else {
-      res.send({ status: "error", message: "complete los datos necesarios" })
+    try {
+      const newUser = await sessionService.register(req,res)
+      res.send({ status: "success", message: "usuario registrado con exito", user: newUser })   
+    } catch (error) {
+      console.log("🚀 ~ file: users.service.js:65 ~ sessionServiceDao ~ registerUser= ~ error:", error)
     }
   }
 
   static async login(req, res, next) {
-    if (req.session.user) {
-      res.send("ya se encuentra logeado")
-    }
-    if (req.body.email && req.body.password) {
-      const findEmail = await userModel.findOne({ email: req.body.email });
+    
+     try {
+       const logUser = await sessionService.login(req,res)
 
-      if (!findEmail) {
-        res.send({ status: "error", message: "Email no registrado" })
-      }
-
-      const isValidPass = await isValidPassword(req.body.password, findEmail.password)
-
-      if (!isValidPass) {
-        res.send({ status: "error", message: "Contraseña incorrecta" })
-      }
-
-      req.session.user = {
-        ...findEmail,
-        password: "",
-      }
-      res.send({ status: "success", message: "usuario logeado con exito", user: req.session.user })
-    }
-    else {
-      res.send({ status: "error", message: "complete los datos necesarios" })
-    }
+       res.send({ status: "success", message: "usuario logeado", user: logUser })  
+     } catch (error) {
+      console.log("🚀 ~ file: users.service.js:65 ~ sessionServiceDao ~ registerUser= ~ error:", error)
+     }
 
   }
 

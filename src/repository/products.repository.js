@@ -27,7 +27,7 @@ class ProductsServiceDao {
     }
     getAll = async (queries) => {
         try {
-            const produts = await productModel.find()
+            const produts = await productModel.find().lean().exec()
             return produts
         } catch (error) {
             console.log("error in get products", error)
@@ -46,7 +46,7 @@ class ProductsServiceDao {
 
     getProductById = async (id) => {
         try {
-            const product = await productModel.findById(id)
+            const product = await productModel.findById(id).lean().exec()
 
             return product
         } catch (error) {

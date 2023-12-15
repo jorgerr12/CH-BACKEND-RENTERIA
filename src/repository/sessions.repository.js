@@ -11,38 +11,57 @@ class SessionServiceDao {
       this.cartService = CartService
   }
 
-  static async register(req, res, next) {
+ register = async(req, res, next) =>{
     if (req.session.user) {
       res.send("ya se encuentra logeado")
     }
-    if (req.body.email && req.body.firstName && req.body.password) {
+    try {
+      if (req.body.email && req.body.firstName && req.body.password) {
+        const firstName = req.body.firstName ?? req.params.firstName ?? req.firstName;
+        const lastName = req.body.lastName ?? req.params.lastName;
+        const age = req.body.age ?? req.params.age;
+        const username = req.body.userName ?? req.params.username;
+        const email = req.body.email ?? req.params.email;
+        const role = req.body.role || "USER";
+        const passHashed = await createHashValue(req.body.password)
 
-      const passHashed = await createHashValue(req.body.password)
-      const newUserData = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        age: req.body.age,
-        username: req.body.userName,
-        email: req.body.email,
-        password: passHashed,
+        const findUserEmail = await userModel.findOne({ email:email })
+        if (findUserEmail) {
+          return res.status(409).json({ message: "username and/or email already exist" });
       }
 
-      const findUserEmail = await userModel.findOne({ email: newUserData.email })
+      let newUserData;
+      
+        let cartData = {};
+        const newCart = await CartService.createCart(cartData);
 
-      if (findUserEmail) {
-        return res
-          .status(409).json({ message: "username and/or email already exist" });
+        newUserData = {
+            firstName,
+            lastName,
+            age,
+            username,
+            email,
+            password: passHashed,
+            cart: newCart._id,
+            role
+        };
+ 
+        const newUser = await userModel.create(newUserData);
+      
+        await newUser.save()
+        return newUser
       }
-      const newUser = await userModel.create(newUserData);
-      req.session.user = { ...newUserData };
-      res.send({ status: "success", message: "usuario registrado con exito", user: newUser })
+      else {
+        res.send({ status: "error", message: "complete los datos necesarios" })
+      }
+
+    } catch (error) {
+      console.log("🚀 ~ file: users.service.js:65 ~ sessionServiceDao ~ registerUser= ~ error:", error)
     }
-    else {
-      res.send({ status: "error", message: "complete los datos necesarios" })
-    }
+
   }
 
-  static async login(req, res, next) {
+  login =  async(req, res, next) =>{
     if (req.session.user) {
       res.send("ya se encuentra logeado")
     }
@@ -58,13 +77,12 @@ class SessionServiceDao {
       if (!isValidPass) {
         res.send({ status: "error", message: "Contraseña incorrecta" })
       }
-      findEmail.lastActivity = new Date();
+      findEmail.last_connection = new Date();
       await findEmail.save();
-      req.session.user = {
-        ...findEmail,
-        password: "",
-      }
-      res.send({ status: "success", message: "usuario logeado con exito", user: req.session.user })
+      
+      req.session.user =findEmail
+      const logUser = {...findEmail}
+      return logUser
     }
     else {
       res.send({ status: "error", message: "complete los datos necesarios" })
@@ -72,7 +90,7 @@ class SessionServiceDao {
 
   }
 
-  static async logout(req, res) {
+   logout = async(req, res)=> {
     if (req.session.user) {
       req.session.destroy((err) => {
         if (err) {
@@ -87,7 +105,7 @@ class SessionServiceDao {
     }
   }
 
-  static async github(req, res) {
+   github= async(req, res)=> {
     try {
       passport.authenticate("github", { scope: ["user:email"] })(req, res);
     } catch (error) {
@@ -95,7 +113,7 @@ class SessionServiceDao {
     }
   }
 
-  static async githubcallback(req, res) {
+   githubcallback = async(req, res)=> {
     try {
       passport.authenticate("github", { failureRedirect: "/login" })(
         req,

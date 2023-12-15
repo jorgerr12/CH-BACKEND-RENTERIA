@@ -48,11 +48,20 @@ class CartsServiceDao {
         }
     }
 
-    updateProductFromCart= async(cid,pid,qnt)=>{
+    updateProductFromCart= async(cid,pid)=>{
     try {
         const cart = await cartsModel.findById(cid)
-        const productIndex = cart.products.findIndex(item => item.product ==pid )
-        cart.products[productIndex].quantity = qnt
+        const productIndex = cart.products.findIndex(item => item.product.toString() ===pid )
+        if (productIndex !== -1) {
+            // Si el producto ya está en el carrito, incrementar la cantidad
+            cart.products[productIndex].quantity++;
+          } else {
+        
+            cart.products.push({
+                product: pid,
+                quantity: 1
+              });
+            }
 
         const upadatedCart = await cart.save();
 
@@ -66,7 +75,7 @@ class CartsServiceDao {
         try {
             const cart = await cartsModel.findById(cid)
 
-            const productIndex = await cart.products.findIndex(item => item.product == pid)
+            const productIndex = await cart.products.findIndex(item => item.product.toString() === pid)
             cart.products.splice(productIndex,1);
 
             const updatedCart = await cart.save()

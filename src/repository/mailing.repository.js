@@ -34,7 +34,7 @@ export class MailingRepository{
                 subject: `We've deleted your account due to inactivity`,
                 html: `
                 <div>
-                    <h1>GPAD RECORDS</h1>
+                    <h1>KAMITEC STORE</h1>
                     <h3>Ecommerse</h3>
                     <p>we're sad to see you go, but you've been lazy lately...</p>
                 </div>
@@ -129,6 +129,32 @@ export class MailingRepository{
           } catch (err) {
             return ({ status: 'error', error: err.message })
           }
+        }
+    }
+
+    sendPursache = async(emailAdress,ticket)=>{
+        try {
+            let result = await transporter.sendMail({
+                FROM: config.EMAIL,
+                to: emailAdress,
+                subject: `Su orden de compra fue realizada con exito`,
+                html: `
+                <div>
+                    <h1>KAMITEC STORE</h1>
+                    <h3>Ecommerse</h3>
+                    <p>Realizo con exito su orden de compra con el numero</p>
+                    <span>${ticket}</span>
+                </div>
+                `
+            });
+            console.log(
+                "🚀 ~ file: emails.routes.js:49 ~ EmailService ~ sendEmails ~ result:",
+                result
+            );
+        
+            return { ok: true, message: `Email succesfully sent to ${emailAdress}` };
+        } catch (error) {
+        console.log("🚀 ~ file: emails.repository.js:59 ~ EmailService ~ sendEmails= ~ error:", error)
         }
     }
 }

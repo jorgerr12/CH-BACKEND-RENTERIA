@@ -12,7 +12,7 @@ export default class CartDao {
   }
 
   async getCartById(cid) {
-    return cartsModel.findById(cid);
+    return cartsModel.findById(cid).lean().exec();
   }
 
   async createCart(cartData) {

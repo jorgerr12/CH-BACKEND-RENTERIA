@@ -1,5 +1,7 @@
+import UsersDTO from "../dto/users.dto.js";
 import userModel from "../models/users.model.js";
 import { MailingController } from "./mailing.controller.js";
+
 
 
 
@@ -11,7 +13,9 @@ export class UserController {
         try {
             const users = await userModel.find({});
             const filteredUsers = users.filter(user =>user.role !== "ADMIN");
-            res.status(200).json(filteredUsers)        
+
+            const usersDTO = filteredUsers.map(user => new UsersDTO(user))
+            res.status(200).json(usersDTO)        
         } catch (error) {
             req.status(500).json("error al obtener usuarios:",error)
         }
